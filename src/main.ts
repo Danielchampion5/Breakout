@@ -1,4 +1,10 @@
-import { Actor, CollisionType, Color, Engine, vec } from "excalibur"
+import { Actor, CollisionType, Color, Engine, Font, FontUnit, Label, Loader, Sound, vec } from "excalibur"
+const morte = new Sound('/sounds/roblox-death-sound-effect.mp3')
+const som = new Loader([morte])
+const pickup = new Sound('/sounds/pickup.wav')
+const som2 = new Loader([pickup])
+const aplausos = new Sound('/sounds/applause-180037.mp3')
+const som3 = new Loader([aplausos])
 
 //Criar uma instancia de Engine, que representa o jogo
 const game = new Engine({
@@ -105,7 +111,17 @@ listaBlocos.forEach(bloco => {
 
 let pontos = 0
 
+const textoPontos = new Label({
+	text: pontos.toString(),
+	font: new Font({
+		size: 40,
+		color: Color.White, strokeColor: Color.Black,
+		unit: FontUnit.Px
+	}),
+	pos: vec(600, 500)
+})
 
+game.add(textoPontos)
 
 let colidindo: boolean = false
 
@@ -114,6 +130,20 @@ bolinha.on("collisionstart", (event) => {
 
 	if (listaBlocos.includes(event.other)) {
 		event.other.kill()
+		pickup.play(0.5)
+
+		pontos++
+
+		textoPontos.text = pontos.toString()
+
+		console.log(pontos)
+
+		if(pontos >= 15) {
+			alert("Voce venceu!!!!!")
+			aplausos.play(1)
+			window.location.reload()
+		}
+		
 	}
 
 	let interseccao = event.contact.mtv.normalize()
@@ -130,14 +160,19 @@ bolinha.on("collisionstart", (event) => {
 	}
 })
 
-bolinha.on("collisionend", () =>{
+bolinha.on("collisionend", () => {
 	colidindo = false
 })
 
 bolinha.on("exitviewport", () => {
+	morte.play(1)
 	alert("morreu")
 	window.location.reload()
 })
 
 //Inicia o game
-game.start()
+await game.start(som),
+
+await game.start(som2),
+
+await game.start(som3)
