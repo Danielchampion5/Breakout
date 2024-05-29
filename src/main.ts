@@ -5,6 +5,8 @@ const pickup = new Sound('/sounds/pickup.wav')
 const som2 = new Loader([pickup])
 const aplausos = new Sound('/sounds/applause-180037.mp3')
 const som3 = new Loader([aplausos])
+const ping = new Sound('/sounds/beeep-43965.mp3')
+const som4 = new Loader([ping])
 
 //Criar uma instancia de Engine, que representa o jogo
 const game = new Engine({
@@ -139,8 +141,8 @@ bolinha.on("collisionstart", (event) => {
 		console.log(pontos)
 
 		if(pontos >= 15) {
-			alert("Voce venceu!!!!!")
 			aplausos.play(1)
+			alert("Voce venceu!!!!!")
 			window.location.reload()
 		}
 		
@@ -150,7 +152,7 @@ bolinha.on("collisionstart", (event) => {
 
 	if (colidindo == false) {
 		colidindo = true
-
+        ping.play(1)
 		if (Math.abs(interseccao.x) > Math.abs(interseccao.y)) {
 			bolinha.vel.x *= -1
 		}
@@ -173,6 +175,8 @@ bolinha.on("exitviewport", () => {
 //Inicia o game
 await game.start(som),
 
-await game.start(som2),
+game.start(som2),
 
-await game.start(som3)
+game.start(som3), 
+
+game.start(som4)
